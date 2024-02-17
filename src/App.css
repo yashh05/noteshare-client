@@ -1,0 +1,44 @@
+#first-div {
+  height: 200px;
+  width: 100%;
+  background-color: black;
+}
+
+.underline-component {
+  position: relative;
+  transition: all 100ms linear;
+}
+
+.underline-component::after {
+  content: "";
+  width: 0px;
+  height: 2px;
+  margin: auto;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  background-color: black;
+  transition: all linear 0.3s; /* Add transition property here if needed */
+}
+
+.underline-component:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+.feature-component {
+  position: relative;
+}
+
+.feature-component::after {
+  content: "";
+  position: absolute;
+  bottom: -27px;
+  border-bottom-left-radius: 22px;
+  border-bottom-right-radius: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 130%;
+  height: 25px;
+  background-color: rgb(30 41 59);
+}
