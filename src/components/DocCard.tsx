@@ -7,23 +7,28 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "./ui/badge";
+import { Role } from "@/tsTypes";
+import { useNavigate } from "react-router-dom";
 
 export default function DocCard({
+  id,
   role,
   name,
   desc,
 }: {
-  role: "admin" | "read-only" | "read-write";
+  id: string;
+  role: Role;
   name: string;
-  desc: string;
+  desc: string | undefined;
 }) {
+  const nav = useNavigate();
   return (
-    <Card className="w-[350px] hover:bg-primary/5 cursor-pointer">
+    <Card className=" w-[88vw] md:w-[28vw] hover:bg-primary/5 cursor-pointer">
       <CardHeader>
         <button className=" text-start">
           <CardTitle className="flex uppercase justify-between items-center mb-[2vh]">
-            {name}
-            <Badge variant="secondary" className=" px-[0.2vw]">
+            <h1 className=" text-[3.5vw] md:text-[1.2vw]">{name}</h1>
+            <Badge variant="default" className=" text-[2vw] md:text-[0.8vw]">
               {role}
             </Badge>
           </CardTitle>
@@ -31,7 +36,12 @@ export default function DocCard({
         </button>
       </CardHeader>
       <CardFooter className="flex justify-between">
-        <Button disabled={role !== "admin"}>Settings</Button>
+        <Button
+          disabled={role !== Role.Admin}
+          onClick={() => nav(`/doc/settings/${id}`)}
+        >
+          Settings
+        </Button>
         <Button variant="outline">Open</Button>
       </CardFooter>
     </Card>

@@ -1,4 +1,4 @@
-import Footer from "./Footer";
+// import Footer from "./Footer";
 import Navbar from "./Navbar";
 // import Home from "@/Routes/Home";
 // import Dashboard from "@/Routes/Dashboard";
@@ -9,7 +9,7 @@ const Layout = () => {
     <>
       <Navbar />
       <Outlet />
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

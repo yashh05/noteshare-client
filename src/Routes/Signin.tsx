@@ -1,6 +1,95 @@
-import { Link } from "react-router-dom";
+import { userSignedInAtom } from "@/atoms/atoms";
+import { signInSchema } from "@/zod/schema";
+import axios from "axios";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+import { ZodError } from "zod";
+
+axios.defaults.withCredentials = true;
 
 const Signin = () => {
+  const inititalError = {
+    emailError: "",
+    passwordError: "",
+    other: "",
+  };
+
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+  const [formError, setFormError] = useState(inititalError);
+
+  const setUserSigned = useSetRecoilState(userSignedInAtom);
+
+  const navigate = useNavigate();
+
+  async function handleSignin(e: any): Promise<void> {
+    e.preventDefault();
+
+    try {
+      setFormError(inititalError);
+      const res = signInSchema.parse({
+        email: form.email,
+        password: form.password,
+      });
+      const { email, password } = res;
+
+      const data = await axios.post(
+        `${import.meta.env.VITE_BACKEND_PATH}/auth/signin`,
+        {
+          email,
+          password,
+        }
+      );
+
+      setUserSigned(() => {
+        return { loggedin: true, email: data.data.email };
+      });
+      localStorage.setItem("email", data.data.email);
+
+      navigate("/dashboard");
+    } catch (error: any) {
+      if (error instanceof ZodError) {
+        const err = error.errors.map((indiErr) => {
+          return {
+            path: indiErr.path[0],
+            message: indiErr.message,
+          };
+        });
+        err.forEach((error) => {
+          console.log(error);
+          inititalError;
+          setFormError((formError) => {
+            return { ...formError, [error.path + "Error"]: error.message };
+          });
+        });
+      } else {
+        setFormError(inititalError);
+        setFormError((formError) => {
+          return { ...formError, other: error.response.data.error };
+        });
+      }
+
+      setUserSigned(() => {
+        return { loggedin: false, email: "" };
+      });
+      error.response.data.map(() => {});
+      console.log(error);
+    }
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm((previous) => {
+      return {
+        ...previous,
+        [name]: value,
+      };
+    });
+  };
+
   return (
     <div className=" pt-28">
       <div className="flex flex-col gap-5 justify-center items-center w-1/3 m-auto shadow-md text-light-grey border-2 rounded-md p-3 font-poppins ">
@@ -10,24 +99,40 @@ const Signin = () => {
           className="w-9 animate-logo-smooth"
         />
         <h1 className=" text-dark-grey text-2xl font-bold"> WELCOME BACK</h1>
+        {formError.other !== "" && (
+          <p className=" text-red-500">{formError.other}</p>
+        )}
         <h5>
           Don't have an account yet?{" "}
           <Link to="/signup" className="text-black underline cursor-pointer">
             signup
           </Link>
         </h5>
-        <form className=" flex flex-col w-full gap-3">
+        <form className=" flex flex-col w-full gap-3" onSubmit={handleSignin}>
           <input
             type="text"
             placeholder="email address"
+            name="email"
             className="p-2 bg-[#ebe9e9] py-2 rounded-md outline-none"
+            onChange={handleChange}
           />
+          {formError.emailError !== "" && (
+            <p className=" text-red-500">{formError.emailError}</p>
+          )}
           <input
             type="password"
             placeholder="Password"
+            name="password"
             className="p-2 bg-[#ebe9e9] py-2 rounded-md outline-none"
+            onChange={handleChange}
           />
-          <button className=" bg-[#0272D8] font-semibold tracking-wide text-white py-2 rounded-md">
+          {formError.passwordError !== "" && (
+            <p className=" text-red-500">{formError.passwordError}</p>
+          )}
+          <button
+            type="submit"
+            className=" bg-[#0272D8] font-semibold tracking-wide text-white py-2 rounded-md"
+          >
             Login
           </button>
         </form>
