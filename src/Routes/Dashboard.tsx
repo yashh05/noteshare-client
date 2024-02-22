@@ -24,6 +24,7 @@ const Dashboard = () => {
     });
     localStorage.removeItem("email");
     navigate("/");
+    return null; // Return null or an empty element here
   } else {
     const docArray = allDocs.contents;
 
