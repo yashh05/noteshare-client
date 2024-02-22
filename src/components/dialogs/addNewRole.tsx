@@ -23,8 +23,11 @@ import { useState } from "react";
 import { Role } from "@/tsTypes";
 import { addNewUserSchema } from "@/zod/schema";
 import { ZodError } from "zod";
+import { LoadingSpinner } from "../ui/icons";
 
 const AddNewRole = ({ id }: { id: string | undefined }) => {
+  const [loading, setLoading] = useState(false);
+
   const [form, setForm] = useState({
     email: "",
     role: "readOnly",
@@ -37,6 +40,7 @@ const AddNewRole = ({ id }: { id: string | undefined }) => {
 
   const handleNewRole = async () => {
     try {
+      setLoading(true);
       const { email, role } = form;
       addNewUserSchema.parse({ email, role });
 
@@ -45,9 +49,10 @@ const AddNewRole = ({ id }: { id: string | undefined }) => {
         email,
         role,
       });
-
+      setLoading(false);
       window.location.reload();
     } catch (error: any) {
+      setLoading(false);
       if (error instanceof ZodError) {
         const err = error.errors.map((indiErr) => {
           return {
@@ -68,6 +73,8 @@ const AddNewRole = ({ id }: { id: string | undefined }) => {
           return { ...formError, other: error.response.data.error };
         });
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -136,7 +143,10 @@ const AddNewRole = ({ id }: { id: string | undefined }) => {
               </SelectContent>
             </Select>
           </div>
-          <Button type="submit">Submit</Button>
+          <Button type="submit">
+            {" "}
+            {loading ? <LoadingSpinner className=" m-auto" /> : "Submit"}
+          </Button>
         </form>
       </DialogContent>
     </Dialog>

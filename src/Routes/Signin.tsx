@@ -1,4 +1,5 @@
 import { userSignedInAtom } from "@/atoms/atoms";
+import { LoadingSpinner } from "@/components/ui/icons";
 import { signInSchema } from "@/zod/schema";
 import axios from "axios";
 import { useState } from "react";
@@ -9,6 +10,8 @@ import { ZodError } from "zod";
 axios.defaults.withCredentials = true;
 
 const Signin = () => {
+  const [loading, setLoading] = useState(false);
+
   const inititalError = {
     emailError: "",
     passwordError: "",
@@ -29,6 +32,7 @@ const Signin = () => {
     e.preventDefault();
 
     try {
+      setLoading(true);
       setFormError(inititalError);
       const res = signInSchema.parse({
         email: form.email,
@@ -45,15 +49,16 @@ const Signin = () => {
         { withCredentials: true }
       );
 
-      console.log(data.headers);
+      console.log(data);
 
       setUserSigned(() => {
         return { loggedin: true, email: data.data.email };
       });
       localStorage.setItem("email", data.data.email);
-
+      setLoading(false);
       navigate("/dashboard");
     } catch (error: any) {
+      setLoading(false);
       if (error instanceof ZodError) {
         const err = error.errors.map((indiErr) => {
           return {
@@ -78,6 +83,8 @@ const Signin = () => {
       setUserSigned(() => {
         return { loggedin: false, email: "" };
       });
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -130,11 +137,12 @@ const Signin = () => {
           {formError.passwordError !== "" && (
             <p className=" text-red-500">{formError.passwordError}</p>
           )}
+
           <button
             type="submit"
             className=" bg-[#0272D8] font-semibold tracking-wide text-white py-2 rounded-md"
           >
-            Login
+            {loading ? <LoadingSpinner className=" m-auto" /> : "Login"}
           </button>
         </form>
         <hr className=" w-full" />

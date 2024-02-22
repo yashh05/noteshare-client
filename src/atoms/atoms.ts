@@ -45,9 +45,12 @@ export const DocSettingAtom = atomFamily({
 
         const userSignedIn = get(userSignedInAtom);
         if (userSignedIn.loggedin) {
-          const res = await axios.post("http://localhost:3000/doc/getAllUser", {
-            docId: id,
-          });
+          const res = await axios.post(
+            `${import.meta.env.VITE_BACKEND_PATH}/doc/getAllUser`,
+            {
+              docId: id,
+            }
+          );
 
           return res.data.users;
         } else {

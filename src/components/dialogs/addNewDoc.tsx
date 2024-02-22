@@ -13,8 +13,11 @@ import { useState } from "react";
 import { addNewDocSchema } from "@/zod/schema";
 import { ZodError } from "zod";
 import axios from "axios";
+import { LoadingSpinner } from "../ui/icons";
 
 const AddNewDoc = () => {
+  const [loading, setLoading] = useState(false);
+
   const inititalError = {
     addNewDocNameError: "",
     addNewDocDescError: "",
@@ -38,6 +41,7 @@ const AddNewDoc = () => {
   const handleAddNewDoc = async (e: any) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const res = addNewDocSchema.parse({
         addNewDocName: addNewForm.addNewDocName,
         addNewDocDesc: addNewForm.addNewDocDesc,
@@ -47,8 +51,10 @@ const AddNewDoc = () => {
         name: res.addNewDocName,
         desc: res.addNewDocDesc,
       });
+      setLoading(false);
       window.location.reload();
     } catch (error: any) {
+      setLoading(false);
       if (error instanceof ZodError) {
         const err = error.errors.map((indiErr) => {
           return {
@@ -70,6 +76,8 @@ const AddNewDoc = () => {
           return { ...formError, other: error.response.data.error };
         });
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -136,7 +144,9 @@ const AddNewDoc = () => {
               </div>
             )}
           </div>
-          <Button>Submit</Button>
+          <Button className=" w-full mt-5">
+            {loading ? <LoadingSpinner className=" m-auto" /> : "Submit"}
+          </Button>
         </form>
       </DialogContent>
     </Dialog>

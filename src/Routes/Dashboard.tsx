@@ -3,6 +3,7 @@ import DocCard from "@/components/DocCard";
 import { useRecoilValueLoadable, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 import { Doc } from "@/tsTypes";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -10,7 +11,13 @@ const Dashboard = () => {
   const setUserSigned = useSetRecoilState(userSignedInAtom);
 
   if (allDocs.state === "loading") {
-    return <p>loading...</p>;
+    return (
+      <div className=" w-[100vw] mt-[20vh] flex flex-col gap-[5vh]">
+        <Skeleton className="h-4 w-[50vw] m-auto bg-slate-400" />
+        <Skeleton className="h-4 w-[60vw] m-auto bg-slate-400" />
+        <Skeleton className="h-4 w-[70vw] m-auto bg-slate-400" />
+      </div>
+    );
   } else if (allDocs.state === "hasError") {
     setUserSigned(() => {
       return { loggedin: false, email: "" };

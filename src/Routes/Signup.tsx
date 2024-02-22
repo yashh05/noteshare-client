@@ -1,4 +1,5 @@
 import { userSignedInAtom } from "@/atoms/atoms";
+import { LoadingSpinner } from "@/components/ui/icons";
 import { signUpSchema } from "@/zod/schema";
 import axios from "axios";
 import { useState } from "react";
@@ -7,6 +8,7 @@ import { useSetRecoilState } from "recoil";
 import { ZodError } from "zod";
 
 const Signup = () => {
+  const [loading, setLoading] = useState(false);
   const inititalError = {
     nameError: "",
     emailError: "",
@@ -29,6 +31,7 @@ const Signup = () => {
     e.preventDefault();
 
     try {
+      setLoading(true);
       setFormError(inititalError);
       const res = signUpSchema.parse({
         name: form.name,
@@ -50,9 +53,10 @@ const Signup = () => {
         return { loggedin: true, email: data.data.email };
       });
       localStorage.setItem("email", data.data.email);
-
+      setLoading(false);
       navigate("/dashboard");
     } catch (error: any) {
+      setLoading(false);
       if (error instanceof ZodError) {
         const err = error.errors.map((indiErr) => {
           return {
@@ -76,6 +80,8 @@ const Signup = () => {
       setUserSigned(() => {
         return { loggedin: false, email: "" };
       });
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -139,7 +145,7 @@ const Signup = () => {
             <p className=" text-red-500">{formError.emailError}</p>
           )}
           <button className=" bg-gradient-to-r from-cyan-500 to-blue-500 font-semibold tracking-wide text-white py-2 rounded-md">
-            Signup
+            {loading ? <LoadingSpinner className=" m-auto" /> : "sign Up"}
           </button>
         </form>
         <hr className=" w-full" />

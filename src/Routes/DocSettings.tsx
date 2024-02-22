@@ -32,6 +32,7 @@ import { useParams } from "react-router-dom";
 import { handleRemoveRole } from "@/lib/docSetting.util";
 
 import AddNewRole from "@/components/dialogs/addNewRole";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export type DocSettingType = {
   role: Role;
@@ -108,7 +109,13 @@ export default function DataTable() {
   });
 
   if (docAllUser.state === "loading") {
-    return <p>Loading ...</p>;
+    return (
+      <div className=" w-[100vw] mt-[20vh] flex flex-col gap-[5vh]">
+        <Skeleton className="h-4 w-[50vw] m-auto bg-slate-400" />
+        <Skeleton className="h-4 w-[60vw] m-auto bg-slate-400" />
+        <Skeleton className="h-4 w-[70vw] m-auto bg-slate-400" />
+      </div>
+    );
   } else if (docAllUser.state === "hasError") {
     return <p>Error</p>;
   } else {

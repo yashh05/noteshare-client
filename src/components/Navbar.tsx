@@ -32,14 +32,14 @@ const Navbar = () => {
           NoteShare
         </h3> */}
       </div>
-      <div className="flex justify-around md:justify-center items-center gap-[2vw] md:gap-[1vw]">
+      <div className="flex justify-around md:justify-center items-center text-[2.5vw] md:text-[1.2vw] gap-[2vw] md:gap-[1vw]">
         {location.pathname === "/" && (
           <>
             <ScrollLink
               to="features"
               spy={true}
               smooth={true}
-              className="underline-component cursor-pointer text-[4vw] md:text-[1.2vw]"
+              className="underline-component cursor-pointer "
             >
               Features
             </ScrollLink>
@@ -48,14 +48,14 @@ const Navbar = () => {
               to="explore"
               spy={true}
               smooth={true}
-              className="underline-component cursor-pointer text-[4vw] md:text-[1.2vw]"
+              className="underline-component cursor-pointer"
             >
               Explore
             </ScrollLink>
             {userSignedIn.loggedin && (
               <Link
                 to="/dashboard"
-                className="underline-component cursor-pointer text-[4vw] md:text-[1.2vw]"
+                className="underline-component cursor-pointer"
               >
                 Dashboard
               </Link>

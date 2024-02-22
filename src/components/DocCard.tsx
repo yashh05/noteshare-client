@@ -27,12 +27,20 @@ export default function DocCard({
       <CardHeader>
         <button className=" text-start">
           <CardTitle className="flex uppercase justify-between items-center mb-[2vh]">
-            <h1 className=" text-[3.5vw] md:text-[1.2vw]">{name}</h1>
+            <h1 className=" text-[3.5vw] md:text-[1.2vw]">
+              {name.length > 20 ? name.substring(0, 20) + "..." : name}
+            </h1>
             <Badge variant="default" className=" text-[2vw] md:text-[0.8vw]">
               {role}
             </Badge>
           </CardTitle>
-          <CardDescription>{desc}</CardDescription>
+          <CardDescription>
+            {desc
+              ? desc.length > 20
+                ? desc.substring(0, 20) + "..."
+                : desc
+              : "No Description"}
+          </CardDescription>
         </button>
       </CardHeader>
       <CardFooter className="flex justify-between">
