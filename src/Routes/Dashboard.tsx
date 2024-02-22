@@ -29,20 +29,21 @@ const Dashboard = () => {
 
     return (
       <div className=" flex justify-center md:justify-start items-center gap-[2vh] px-[4vw] py-[6vw] flex-wrap">
-        {docArray.length === 0 && (
-          <p>No Document Found, Please Create One (your top right corner)!</p>
+        {docArray.length === 0 ? (
+          <p>{`No Document Found, Please Create One (your top right corner)!`}</p>
+        ) : (
+          docArray.map((doc: Doc) => {
+            return (
+              <DocCard
+                key={doc.docId}
+                id={doc.docId}
+                role={doc.role}
+                name={doc.name}
+                desc={doc.desc}
+              />
+            );
+          })
         )}
-        {docArray.map((doc: Doc) => {
-          return (
-            <DocCard
-              key={doc.docId}
-              id={doc.docId}
-              role={doc.role}
-              name={doc.name}
-              desc={doc.desc}
-            />
-          );
-        })}
       </div>
     );
   }
