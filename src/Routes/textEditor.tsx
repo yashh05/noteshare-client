@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import Quill, { DeltaOperation, TextChangeHandler } from "quill";
+import Quill, { TextChangeHandler } from "quill";
 import { useParams } from "react-router-dom";
 import { Socket, io } from "socket.io-client";
 import "quill/dist/quill.snow.css";
@@ -57,7 +57,7 @@ function TextEditor() {
 
     const saveDocInterval = setInterval(() => {
       socket.emit("save-doc", { docData: quill.getContents() });
-    }, 2000);
+    }, SAVE_INTERVAL_MS);
 
     return () => clearInterval(saveDocInterval);
   }, [socket, quill]);
@@ -90,6 +90,8 @@ function TextEditor() {
     if (socket == null || quill == null) return;
 
     const handler: TextChangeHandler = (delta, oldDelta, source) => {
+      console.log(oldDelta);
+
       if (source !== "user") return;
       socket.emit("send-changes", delta);
     };

@@ -52,7 +52,7 @@ const Signin = () => {
       });
       localStorage.setItem("email", data.data.email);
 
-      // navigate("/dashboard");
+      navigate("/dashboard");
     } catch (error: any) {
       if (error instanceof ZodError) {
         const err = error.errors.map((indiErr) => {
