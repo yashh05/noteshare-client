@@ -21,3 +21,15 @@ export const signInSchema = z.object({
     .string({ required_error: "Enter your password" })
     .min(6, "Password should be atleast 6 digits"),
 });
+
+export const signUpSchema = z.object({
+  name: z
+    .string({ required_error: "Enter your name" })
+    .min(1, "Enter your name"),
+  email: z
+    .string({ required_error: "Enter your email" })
+    .email("Invalid email"),
+  password: z
+    .string({ required_error: "Enter your password" })
+    .min(6, "Password should be atleast 6 digits"),
+});

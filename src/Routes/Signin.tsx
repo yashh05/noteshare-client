@@ -41,15 +41,18 @@ const Signin = () => {
         {
           email,
           password,
-        }
+        },
+        { withCredentials: true }
       );
+
+      console.log(data.headers);
 
       setUserSigned(() => {
         return { loggedin: true, email: data.data.email };
       });
       localStorage.setItem("email", data.data.email);
 
-      navigate("/dashboard");
+      // navigate("/dashboard");
     } catch (error: any) {
       if (error instanceof ZodError) {
         const err = error.errors.map((indiErr) => {
@@ -60,7 +63,7 @@ const Signin = () => {
         });
         err.forEach((error) => {
           console.log(error);
-          inititalError;
+          setFormError(inititalError);
           setFormError((formError) => {
             return { ...formError, [error.path + "Error"]: error.message };
           });
@@ -75,8 +78,6 @@ const Signin = () => {
       setUserSigned(() => {
         return { loggedin: false, email: "" };
       });
-      error.response.data.map(() => {});
-      console.log(error);
     }
   }
 
@@ -91,8 +92,8 @@ const Signin = () => {
   };
 
   return (
-    <div className=" pt-28">
-      <div className="flex flex-col gap-5 justify-center items-center w-1/3 m-auto shadow-md text-light-grey border-2 rounded-md p-3 font-poppins ">
+    <div className=" w-[100vw] h-[100vh] flex justify-center items-center">
+      <div className="flex flex-col gap-[3vw] md:gap-[1.2vw] justify-center items-center w-[80vw] md:w-2/5 m-auto shadow-md text-light-grey border-2 rounded-md p-3 font-poppins ">
         <img
           src="/assets/vector.png"
           alt=""

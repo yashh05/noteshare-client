@@ -21,25 +21,25 @@ const Navbar = () => {
   };
 
   return (
-    <nav className=" w-full flex justify-between px-[3vw] py-[1.5vw] m-auto items-center shadow-lg rounded-md border bg-white animate-fade-up">
+    <nav className=" w-full flex justify-around md:justify-between px-[3vw] py-[1.5vw] m-auto items-center shadow-lg rounded-md border bg-white animate-fade-up">
       <div className=" cursor-pointer flex items-center gap-[2vw] md:gap-[0.3vw]">
         <img
-          src="./assets/logo2.svg"
+          src="./assets/logo.png"
           alt=""
           className=" inline-block max-w-[7vw] md:max-w-[2.7vw] animate-logo-smooth"
         />
-        <h3 className=" inline-block text-[5vw] md:text-[2vw] font-title tracking-wider font-semibold">
+        {/* <h3 className=" hidden md:inline-block text-[5vw] md:text-[2vw] font-title tracking-wider font-semibold">
           NoteShare
-        </h3>
+        </h3> */}
       </div>
-      <div className="flex justify-center items-center gap-[1vw]">
+      <div className="flex justify-around md:justify-center items-center gap-[2vw] md:gap-[1vw]">
         {location.pathname === "/" && (
           <>
             <ScrollLink
               to="features"
               spy={true}
               smooth={true}
-              className="underline-component cursor-pointer"
+              className="underline-component cursor-pointer text-[4vw] md:text-[1.2vw]"
             >
               Features
             </ScrollLink>
@@ -48,21 +48,20 @@ const Navbar = () => {
               to="explore"
               spy={true}
               smooth={true}
-              className="underline-component cursor-pointer"
+              className="underline-component cursor-pointer text-[4vw] md:text-[1.2vw]"
             >
               Explore
             </ScrollLink>
             {userSignedIn.loggedin && (
               <Link
                 to="/dashboard"
-                className="underline-component cursor-pointer"
+                className="underline-component cursor-pointer text-[4vw] md:text-[1.2vw]"
               >
                 Dashboard
               </Link>
             )}
           </>
         )}
-
         {userSignedIn.loggedin ? (
           <>
             {location.pathname === "/dashboard" && <AddNewDoc />}
@@ -76,12 +75,12 @@ const Navbar = () => {
         ) : (
           <>
             <Link to="/signup">
-              <Button className="transition-all hover:scale-110 text-[1vw]">
+              <Button className="transition-all hover:scale-110 text-[3vw] md:text-[1vw]">
                 Sign Up
               </Button>
             </Link>
             <Link to="/signin">
-              <Button className="transition-all hover:scale-110 text-[1vw]">
+              <Button className="transition-all hover:scale-110 text-[3vw] md:text-[1vw]">
                 Sign In
               </Button>
             </Link>

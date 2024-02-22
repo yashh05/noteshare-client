@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "./ui/badge";
 import { Role } from "@/tsTypes";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function DocCard({
   id,
@@ -42,7 +42,10 @@ export default function DocCard({
         >
           Settings
         </Button>
-        <Button variant="outline">Open</Button>
+        <Link to={`/doc/${id}`}>
+          {" "}
+          <Button variant="outline">Open</Button>
+        </Link>
       </CardFooter>
     </Card>
   );

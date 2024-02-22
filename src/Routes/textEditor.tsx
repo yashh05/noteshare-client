@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import Quill from "quill";
+import Quill, { DeltaOperation, TextChangeHandler } from "quill";
 import { useParams } from "react-router-dom";
 import { Socket, io } from "socket.io-client";
-import "../styles/textEditor.css";
 import "quill/dist/quill.snow.css";
+import { Role } from "@/tsTypes";
 
 const SAVE_INTERVAL_MS = 2000;
 
@@ -20,17 +20,85 @@ const TOOLBAR_OPTIONS = [
 ];
 
 function TextEditor() {
-  const { fileId: documentId } = useParams<{ fileId: string }>();
+  const { fileId } = useParams<{ fileId: string }>();
   const [quill, setQuill] = useState<Quill>();
+  const [userRole, setUserRole] = useState<Role>();
   const [socket, setSocket] = useState<Socket>();
 
   useEffect(() => {
-    const s = io(`${import.meta.env.BACKEND_PATH}`);
+    const s = io(`${import.meta.env.VITE_BACKEND_PATH}`, {
+      withCredentials: true,
+      query: {
+        docId: fileId,
+      },
+    });
     setSocket(s);
     return () => {
       s.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    if (!socket || !quill) return;
+    socket.emit("get-doc");
+    socket.on("load-doc", (document, userRole) => {
+      console.log(userRole);
+      console.log("load document", document);
+      quill.setContents(document);
+      setUserRole(userRole);
+      if (userRole !== Role.readOnly) {
+        quill.enable();
+      }
+    });
+  }, [socket, quill]);
+
+  useEffect(() => {
+    if (!socket || !quill) return;
+
+    const saveDocInterval = setInterval(() => {
+      socket.emit("save-doc", { docData: quill.getContents() });
+    }, 2000);
+
+    return () => clearInterval(saveDocInterval);
+  }, [socket, quill]);
+
+  useEffect(() => {
+    if (!socket || !quill) return;
+
+    const saveDocInterval = setInterval(() => {
+      socket.emit("save-doc", { docData: quill.getContents() });
+    }, 2000);
+
+    return () => clearInterval(saveDocInterval);
+  }, [socket, quill]);
+
+  useEffect(() => {
+    if (socket == null || quill == null) return;
+
+    const handler = (delta: any) => {
+      console.log("receive ", delta);
+      quill.updateContents(delta);
+    };
+    socket.on("receive-changes", handler);
+
+    return () => {
+      socket.off("receive-changes", handler);
+    };
+  }, [socket, quill]);
+
+  useEffect(() => {
+    if (socket == null || quill == null) return;
+
+    const handler: TextChangeHandler = (delta, oldDelta, source) => {
+      if (source !== "user") return;
+      socket.emit("send-changes", delta);
+    };
+    quill.on("text-change", handler);
+
+    return () => {
+      quill.off("text-change", handler);
+    };
+  }, [socket, quill]);
 
   const wrapperRef = useCallback((wrapper: HTMLElement | null) => {
     if (wrapper == null) return;
@@ -47,7 +115,14 @@ function TextEditor() {
     setQuill(q);
   }, []);
 
-  return <div className="container" ref={wrapperRef}></div>;
+  return (
+    <div
+      className={`container ${
+        userRole === Role.readOnly ? "cursor-not-allowed" : ""
+      }`}
+      ref={wrapperRef}
+    ></div>
+  );
 }
 
 export default TextEditor;

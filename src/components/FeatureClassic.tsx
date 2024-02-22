@@ -23,14 +23,16 @@ const FeatureClassic = () => {
   return (
     <div
       id="explore"
-      className="px-[6vw] py-[11vh] font-poppins text-light-grey"
+      className="px-[6vw] py-[9vh] font-poppins text-light-grey"
     >
-      <h1 className=" font-title text-5xl text-dark-grey">Why Choose Us?</h1>
+      <h1 className=" font-title text-[10vw] md:text-[4vw] text-dark-grey">
+        Why Choose Us?
+      </h1>
       <p className=" mt-4 text-xl">
         NoteShare stands out as your go-to platform for academic collaboration,
         offering a suite of features designed to enhance your study habits.
       </p>
-      <div className="flex mt-8 justify-between gap-5">
+      <div className="flex flex-col md:flex-row mt-[4vh] justify-between gap-[4vh] md:gap-5">
         {featureClassicArray.map((feature) => {
           return (
             <FeatureClassicCard
@@ -57,8 +59,10 @@ function FeatureClassicCard({
 }) {
   return (
     <div className=" flex flex-col gap-2 flex-wrap">
-      <img src={icon} alt="" className=" w-8" />
-      <h4 className="text-lg font-semibold">{title}</h4>
+      <div className="flex md:flex-col flex-row items-center gap-[2vw] md:gap-[1vw]">
+        <img src={icon} alt="" className=" w-8" />
+        <h4 className="text-lg font-semibold">{title}</h4>
+      </div>
       <p>{desc}</p>
     </div>
   );

@@ -19,9 +19,9 @@ const Features = () => {
   return (
     <div
       id="features"
-      className="grid grid-cols-2 px-[7vw] py-[19vh] font-poppins "
+      className="grid grid-cols-1 md:grid-cols-2 px-[7vw] py-[9vh] gap-[2vh] ga font-poppins "
     >
-      <div className="flex flex-col gap-5 p-[1vw] text-light-grey">
+      <div className="flex flex-col gap-[3vh] p-[2vw] text-light-grey">
         <h3 className="text-4xl font-title text-dark-grey">Key Features</h3>
         <p>
           Elevate your learning experience with our robust features that help
