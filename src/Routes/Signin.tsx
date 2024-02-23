@@ -56,7 +56,7 @@ const Signin = () => {
       });
       localStorage.setItem("email", data.data.email);
       setLoading(false);
-      navigate("/dashboard");
+      // navigate("/dashboard");
     } catch (error: any) {
       setLoading(false);
       if (error instanceof ZodError) {
