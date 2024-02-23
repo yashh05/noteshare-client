@@ -3,7 +3,7 @@ import { LoadingSpinner } from "@/components/ui/icons";
 import { signInSchema } from "@/zod/schema";
 import axios from "axios";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { ZodError } from "zod";
 
@@ -26,7 +26,7 @@ const Signin = () => {
 
   const setUserSigned = useSetRecoilState(userSignedInAtom);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   async function handleSignin(e: any): Promise<void> {
     e.preventDefault();
