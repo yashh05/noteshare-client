@@ -3,7 +3,7 @@ import { LoadingSpinner } from "@/components/ui/icons";
 import { signInSchema } from "@/zod/schema";
 import axios from "axios";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { ZodError } from "zod";
 
@@ -26,7 +26,7 @@ const Signin = () => {
 
   const setUserSigned = useSetRecoilState(userSignedInAtom);
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   async function handleSignin(e: any): Promise<void> {
     e.preventDefault();
@@ -56,7 +56,7 @@ const Signin = () => {
       });
       localStorage.setItem("email", data.data.email);
       setLoading(false);
-      // navigate("/dashboard");
+      navigate("/dashboard");
     } catch (error: any) {
       setLoading(false);
       if (error instanceof ZodError) {

@@ -27,9 +27,9 @@ import {
 import { Role } from "@/tsTypes";
 import { useRecoilValueLoadable } from "recoil";
 import { DocSettingAtom } from "@/atoms/atoms";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-import { handleRemoveRole } from "@/lib/docSetting.util";
+import { handleDeleteDoc, handleRemoveRole } from "@/lib/docSetting.util";
 
 import AddNewRole from "@/components/dialogs/addNewRole";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -98,6 +98,14 @@ export const columns: ColumnDef<DocSettingType>[] = [
 
 export default function DataTable() {
   const { id } = useParams();
+  if (!id) {
+    return (
+      <>
+        <h1>Invalid route</h1>
+      </>
+    );
+  }
+  const navigate = useNavigate();
 
   const docAllUser = useRecoilValueLoadable(DocSettingAtom(id));
 
@@ -131,8 +139,13 @@ export default function DataTable() {
             className="max-w-sm"
           />
           <div className="flex gap-[2vw] items-center">
-            {<AddNewRole id={id} />}
-            <Button variant="destructive">DELETE</Button>
+            <AddNewRole id={id} />
+            <Button
+              variant="destructive"
+              onClick={() => handleDeleteDoc({ docId: id, navigate })}
+            >
+              DELETE
+            </Button>
           </div>
         </div>
 
